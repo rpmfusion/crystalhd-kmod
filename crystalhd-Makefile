@@ -1,0 +1,21 @@
+
+INCLUDES  = -I$(KDIR)/include
+INCLUDES += -I$(src)/../../include
+INCLUDES += -I$(src)/../../include/link
+INCLUDES += -I$(src)/../../include/flea
+
+EXTRA_CFLAGS   = -D__KERNEL__ -DMODULE $(INCLUDES) $(INC)
+EXTRA_CFLAGS  += -Wall -Wstrict-prototypes -Wno-trigraphs -Werror -O2
+
+OBJ :=  crystalhd_lnx.o \
+        crystalhd_misc.o \
+        crystalhd_cmds.o \
+        crystalhd_hw.o \
+        crystalhd_linkfuncs.o \
+        crystalhd_fleafuncs.o \
+        crystalhd_flea_ddr.o
+
+PWD = $(shell pwd)
+
+obj-$(CONFIG_CRYSTALHD) := crystalhd.o
+        crystalhd-objs := $(OBJ)
