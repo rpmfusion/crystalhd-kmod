@@ -4,13 +4,14 @@
 Name:           crystalhd-kmod
 Summary:        Kernel module (kmod) for crystalhd
 Version:        20170515
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2
-URL:            https://github.com/philipl/crystalhd.git
+URL:            https://github.com/philipl/crystalhd
 Source0:        crystalhd-kmod-%{version}.tar.xz
 Source1:        crystalhd-Makefile
 Source2:        crystalhd-Kconfig
 Source11:       crystalhd-kmodtool-excludekernel-filterfile
+Patch0:         Linux-4.17-Compatibility.patch
 # get the needed BuildRequires (in parts depending on what we build for)
 BuildRequires:  %{_bindir}/kmodtool
 %{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
@@ -34,6 +35,11 @@ kmodtool  --target %{_target_cpu} --repo rpmfusion --kmodname %{name} %{?buildfo
 #Copied from kernel sources
 install -pm 0644 %{SOURCE1} drivers/staging/crystalhd/Makefile
 install -pm 0644 %{SOURCE2} drivers/staging/crystalhd/Kconfig
+
+pushd drivers/staging/crystalhd/
+%patch0 -p3
+popd
+
 for kernel_version in %{?kernel_versions} ; do
         cp -a drivers/staging/crystalhd _kmod_build_${kernel_version%%___*}
 done
@@ -59,6 +65,9 @@ done
 
 
 %changelog
+* Mon Jul 23 2018 Nicolas Chauvet <kwizart@gmail.com> - 20170515-2
+- Add patch for 4.17
+
 * Wed May 17 2017 Nicolas Chauvet <kwizart@gmail.com> - 20170515-1
 - Update to 20170515
 
