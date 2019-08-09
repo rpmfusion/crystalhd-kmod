@@ -4,7 +4,7 @@
 Name:           crystalhd-kmod
 Summary:        Kernel module (kmod) for crystalhd
 Version:        20170515
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPLv2
 URL:            https://github.com/philipl/crystalhd
 Source0:        crystalhd-kmod-%{version}.tar.xz
@@ -65,6 +65,9 @@ done
 
 
 %changelog
+* Fri Aug 09 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 20170515-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Mon Mar 04 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 20170515-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
