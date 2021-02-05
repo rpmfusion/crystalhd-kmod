@@ -4,7 +4,7 @@
 Name:           crystalhd-kmod
 Summary:        Kernel module (kmod) for crystalhd
 Version:        20170515
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        GPLv2
 URL:            https://github.com/philipl/crystalhd
 Source0:        crystalhd-kmod-%{version}.tar.xz
@@ -12,6 +12,7 @@ Source1:        crystalhd-Makefile
 Source2:        crystalhd-Kconfig
 Source11:       crystalhd-kmodtool-excludekernel-filterfile
 Patch0:         Linux-4.17-Compatibility.patch
+Patch1:         crystalhd-kmod-mmap_sem.patch
 # get the needed BuildRequires (in parts depending on what we build for)
 BuildRequires:  %{_bindir}/kmodtool
 %{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
@@ -38,6 +39,7 @@ install -pm 0644 %{SOURCE2} drivers/staging/crystalhd/Kconfig
 
 pushd drivers/staging/crystalhd/
 %patch0 -p3
+%patch1 -p4
 popd
 
 for kernel_version in %{?kernel_versions} ; do
@@ -59,12 +61,14 @@ done
 for kernel_version in %{?kernel_versions}; do
  mkdir -p ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
  install -D -m 755 -t ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/ $(find _kmod_build_${kernel_version%%___*}/ -name '*.ko')
- chmod u+x %{buildroot}%{_prefix}/lib/modules/*/extra/*/*
 done
 %{?akmod_install}
 
 
 %changelog
+* Fri Feb 05 2021 Nicolas Chauvet <kwizart@gmail.com> - 20170515-9
+- Fix build with 5.10 kernel
+
 * Wed Feb 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 20170515-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
