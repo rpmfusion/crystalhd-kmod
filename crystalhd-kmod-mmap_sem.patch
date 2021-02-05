@@ -1,0 +1,24 @@
+diff -up crystalhd-kmod-20170515/drivers/staging/crystalhd/crystalhd_misc.c.mmap_sem crystalhd-kmod-20170515/drivers/staging/crystalhd/crystalhd_misc.c
+--- crystalhd-kmod-20170515/drivers/staging/crystalhd/crystalhd_misc.c.mmap_sem	2017-05-18 00:37:21.000000000 +0200
++++ crystalhd-kmod-20170515/drivers/staging/crystalhd/crystalhd_misc.c	2021-02-05 19:05:12.932510158 +0100
+@@ -644,12 +644,20 @@ BC_STATUS crystalhd_map_dio(struct cryst
+ 		}
+ 	}
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,9,0)
++	mmap_read_lock(current_task->mm);
++#else
+ 	down_read(&current->mm->mmap_sem);
++#endif
+ 
+ 	res = get_user_pages(uaddr, nr_pages, rw == READ ? FOLL_WRITE : 0,
+ 			     dio->pages, NULL);
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,9,0)
++	mmap_read_unlock(current_task->mm);
++#else
+ 	up_read(&current->mm->mmap_sem);
++#endif
+ 
+ 	/* Save for release..*/
+ 	dio->sig = crystalhd_dio_locked;
