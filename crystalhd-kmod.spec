@@ -3,21 +3,23 @@
 
 Name:           crystalhd-kmod
 Summary:        Kernel module (kmod) for crystalhd
-Version:        20170515
-Release:        12%{?dist}
+Version:        20220825
+Release:        1%{?dist}
 License:        GPLv2
-URL:            https://github.com/philipl/crystalhd
+URL:            https://github.com/kwizart/crystalhd
 Source0:        crystalhd-kmod-%{version}.tar.xz
 Source1:        crystalhd-Makefile
 Source2:        crystalhd-Kconfig
 Source11:       crystalhd-kmodtool-excludekernel-filterfile
-Patch0:         Linux-4.17-Compatibility.patch
-Patch1:         crystalhd-kmod-mmap_sem.patch
 # get the needed BuildRequires (in parts depending on what we build for)
 BuildRequires:  %{_bindir}/kmodtool
 %{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
 %{?fedora:BuildRequires: unifdef}
 ExclusiveArch:  i686 x86_64
+
+BuildRequires: gcc
+BuildRequires: make
+BuildRequires: elfutils-libelf-devel
 
 
 # kmodtool does its magic here
@@ -38,8 +40,7 @@ install -pm 0644 %{SOURCE1} drivers/staging/crystalhd/Makefile
 install -pm 0644 %{SOURCE2} drivers/staging/crystalhd/Kconfig
 
 pushd drivers/staging/crystalhd/
-%patch0 -p3
-%patch1 -p4
+echo "Nothing to patch"
 popd
 
 for kernel_version in %{?kernel_versions} ; do
@@ -66,6 +67,9 @@ done
 
 
 %changelog
+* Thu Aug 25 2022 Nicolas Chauvet <kwizart@gmail.com> - 20220825-1
+- Update snapshot
+
 * Sun Aug 07 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 20170515-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1
